@@ -1,0 +1,21 @@
+language: go
+
+go:
+  - tip
+
+before_install:
+  - go get -t -v ./...
+
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/0c8ffc90bfa497096187
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always
