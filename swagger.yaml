@@ -1,0 +1,520 @@
+swagger: "2.0"
+info:
+  description: "Opencrypter api"
+  version: "1"
+  title: "Opencrypter"
+  termsOfService: "https://opencrypter.com/terms/"
+  contact:
+    email: "dan@opencrypter.com"
+
+host: "api.opencrypter.com"
+basePath: "/v1"
+schemes:
+- "https"
+securityDefinitions:
+  ApiKey:
+    type: apiKey
+    in: header
+    name: X-API-ID
+  Signature:
+    type: apiKey
+    in: header
+    name: X-SIGNATURE
+consumes:
+  - "application/json"
+paths:
+  /devices:
+    post:
+      tags:
+      - "Device"
+      summary: "Creates a client device."
+      description: "Creates a unique client device in order to generate unique credentials. Take in mind that credentials cannot be recovered so you should encrypt and store them in your local store."
+      operationId: "postDevice"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DeviceRequest'
+      responses:
+        201:
+          description: "Device created"
+          schema:
+            $ref: '#/definitions/Device'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        409:
+          description: "Conflict with the given resource."
+          schema:
+            $ref: '#/definitions/Error'            
+  /accounts/{id}:
+    put:
+      tags:
+      - "Account"
+      summary: "Encryptes and stores your exchange api credentials."
+      description: "Api credentials are used to authenticate with external exchanges. All credentials are encrypted and stored securelly. In order to secure them, credentials wont be exposed anymore so you should store them in your local store if you need to show them in your application."
+      operationId: "postCredentials"
+      produces:
+      - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []      
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: string
+          description: "Id"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/Account'
+      responses:
+        200:
+          description: "Account updated"
+        201:
+          description: "Account created"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error' 
+    get:
+      tags:
+      - "Account"
+      summary: "Account details"
+      description: "Exchange account details."
+      operationId: "getAccount"
+      security:
+        - ApiKey: []
+          Signature: []      
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: string
+          description: "Id"
+      responses:
+        200:
+          description: "Account details"
+          schema:
+            $ref: '#/definitions/SecureAccount'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'     
+        404:
+          description: "Account not found"
+          schema:
+            $ref: '#/definitions/Error'                 
+  /accounts/{id}/balances:
+    get:
+      tags:
+      - "Account"
+      summary: "Balance provided by the exchange"
+      operationId: "getFunds"
+      consumes:
+      - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: string
+          description: "Id"
+        - in: "query"
+          name: "currencyId"
+          required: false
+          type: string
+          description: "Currency id"          
+      responses:
+        200:
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Balance'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'            
+  /exchanges:
+    get:
+      tags:
+      - "Exchange"
+      summary: "Lists all available exchanges"
+      operationId: "getExchanges"
+      produces:
+      - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []
+      responses:
+        200:
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exchange'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'
+  /exchanges/{id}:
+    get:
+      tags:
+      - "Exchange"
+      summary: "Exchange detail"
+      operationId: "getExchange"
+      produces:
+      - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: string
+          format: uuid
+          description: "Exchange id"
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: '#/definitions/Exchange'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'            
+  /exchanges/{id}/tickers:
+    get:
+      tags:
+      - "Ticker"
+      summary: "Tickers of a specific exchange"
+      operationId: "getExchangeTickers"
+      produces:
+      - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: string
+          format: uuid
+          description: "Exchange id"
+        - in: "query"
+          name: "quoteId"
+          description: "Filter by quote id"
+          required: true
+          type: string          
+      responses:
+        200:
+          description: "List of markets"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Ticker'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'              
+  /tickers/{tickerId}/alerts:
+    get:
+      tags:
+      - "Ticker"
+      summary: "Gets alerts for the given ticker"
+      operationId: "getAlerts"
+      consumes:
+      - "application/json"
+      security:
+        - ApiKey: []
+      parameters:
+        - in: "path"
+          name: "tickerId"
+          required: true
+          type: string
+          format: uuid
+          description: "Ticker id"      
+      responses:
+        200:
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Alert'
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: "Exchange or balance not found"
+          schema:
+            $ref: '#/definitions/Error'          
+  /tickers/{tickerId}/alerts/{alertId}:            
+    put:
+      tags:
+      - "Ticker"
+      summary: "Creates an alert for the given balance price"
+      operationId: "createAlert"
+      produces:
+        - "application/json"
+      consumes:
+        - "application/json"
+      security:
+        - ApiKey: []
+      parameters:
+        - in: "path"
+          name: "tickerId"
+          required: true
+          type: string
+          format: uuid
+          description: "Ticker id"  
+        - in: "path"
+          name: "alertId"
+          required: true
+          type: string
+          format: uuid
+          description: "Ticker id"            
+        - in: body
+          name: "body"
+          description: "Alert to be created"
+          required: true
+          schema:
+            $ref: '#/definitions/Alert'
+      responses:
+        200:
+          description: "Alert updated"      
+        201:
+          description: "Alert created"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: "Exchange or balance not found"
+          schema:
+            $ref: '#/definitions/Error'  
+    delete:
+      tags:
+      - "Ticker"
+      summary: "Deletes an alert"
+      operationId: "deleteAlert"
+      consumes:
+        - "application/json"
+      security:
+        - ApiKey: []
+          Signature: []
+      parameters:
+        - in: "path"
+          name: "tickerId"
+          required: true
+          type: string
+          format: uuid
+          description: "Ticker id"
+        - in: "path"
+          name: "alertId"
+          required: true
+          type: string
+          format: uuid
+          description: "Ticker id"              
+      responses:
+        200:
+          description: "Alert deleted"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: "Exchange or balance not found"
+          schema:
+            $ref: '#/definitions/Error'          
+definitions:
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "Error"
+  DeviceRequest:
+    type: object
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"    
+      os:
+        type: "string"
+        example: "ios"
+      token:
+        type: "string"
+        format: "base64"
+        example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"
+  Device:
+    type: object
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      os:
+        type: "string"
+        example: "ios"
+      token:
+        type: "string"
+        format: "base64"
+        example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"        
+      secret:
+        type: "string"
+        format: "base64"
+        example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"        
+  Account:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"    
+      exchangeId:
+        type: string
+        format: uuid
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      name:
+        type: string
+        example: "My awesome exchange"        
+      apiKey:
+        type: string
+        example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"
+      apiSecret:
+        type: string
+        example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"
+  SecureAccount:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"    
+      exchangeId:
+        type: string
+        format: uuid
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      name:
+        type: string
+        example: "My awesome exchange"        
+  Alert:
+    type: object
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      tickerId:
+        type: "string"
+        format: "uuid"
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      price:
+        type: "number"
+        example: 0.02112001
+      createdAt:
+        type: "string"
+        format: "datetime"
+        example: "2018-08-15T15:52:01+00:00"
+  Exchange:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "100cfe0b-78be-42c2-ba42-95d1f2c67336"
+      name:
+        type: "string"
+        example: Binance
+  Balance:
+    type: "object"
+    properties:
+      currency:
+        $ref: '#/definitions/Currency'
+      volume:
+        type: number
+        example: 29
+      hasAlert:
+        type: boolean
+        example: true
+
+  Currency:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "a825ea9f-7faf-42fa-b68a-bf4839e39ff8"
+      name:
+        type: string
+        example: Bitcoin
+      symbol:
+        type: string
+        example: BTC
+  Ticker:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "a825ea9f-7faf-42fa-b68a-bf4839e39ff8"    
+      quote:
+        $ref: '#/definitions/Currency'
+      base:
+        $ref: '#/definitions/Currency'
+      open:
+        type: number
+        example: 0.0002
+      close:
+        type: number
+        example: 0.03
+      high:
+        type: number
+        example: 0.12
+      low:
+        type: number
+        example: 0.0002
