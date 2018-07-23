@@ -10,7 +10,7 @@ go:
 env:
   global:
     - DB_NAME=opencrypter_test
-    - DB_NAME=5432
+    - DB_PORT=5432
     - DB_USER=postgres
     - DB_HOST=127.0.0.1
     - GIN_MODE=debug
