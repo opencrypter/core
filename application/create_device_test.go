@@ -13,7 +13,7 @@ import (
 func TestCreateDevice_Execute(t *testing.T) {
 	mockedRepository := mock.NewMockDeviceRepository(gomock.NewController(t))
 	DeviceRepository = mockedRepository
-	id, _ := uuid.NewV4()
+	id := uuid.NewV4().String()
 	os := "ios"
 	senderId := "abc"
 
@@ -23,7 +23,7 @@ func TestCreateDevice_Execute(t *testing.T) {
 
 	t.Run("It should create a new device", func(t *testing.T) {
 		expectedDevice := &domain.Device{
-			ID:       id.String(),
+			ID:       id,
 			Os:       os,
 			SenderId: &senderId,
 			Secret:   "test",
@@ -33,13 +33,13 @@ func TestCreateDevice_Execute(t *testing.T) {
 			EXPECT().
 			Add(expectedDevice)
 
-		device, _ := CreateDevice(id.String(), os, &senderId)
+		device, _ := CreateDevice(id, os, &senderId)
 		assert.Equal(t, expectedDevice, device)
 	})
 
 	t.Run("It should return an error on repository fail", func(t *testing.T) {
 		expectedDevice := &domain.Device{
-			ID:       id.String(),
+			ID:       id,
 			Os:       os,
 			SenderId: &senderId,
 			Secret:   "test",
@@ -50,7 +50,7 @@ func TestCreateDevice_Execute(t *testing.T) {
 			Add(expectedDevice).
 			Return(errors.New("error"))
 
-		_, err := CreateDevice(id.String(), os, &senderId)
+		_, err := CreateDevice(id, os, &senderId)
 		assert.Error(t, err)
 	})
 }

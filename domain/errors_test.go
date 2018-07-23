@@ -8,7 +8,7 @@ import (
 
 func TestNewInvalidDeviceError(t *testing.T) {
 	message := "error"
-	assert.Equal(t, message, NewDuplicatedDeviceError(message).Error())
+	assert.Equal(t, message, NewInvalidDeviceError(message).Error())
 }
 
 func TestNewDuplicatedDeviceError(t *testing.T) {

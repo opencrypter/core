@@ -27,7 +27,7 @@ before_script:
   - psql -c 'create database opencrypter_test;' -U postgres
 
 script:
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

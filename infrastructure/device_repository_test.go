@@ -13,24 +13,21 @@ func TestGormDeviceRepository_Save(t *testing.T) {
 	senderId := "abc"
 
 	t.Run("It should save a new device", func(t *testing.T) {
-		id, _ := uuid.NewV4()
-		device, _ := domain.NewDevice(id.String(), os, &senderId)
+		device, _ := domain.NewDevice(uuid.NewV4().String(), os, &senderId)
 		repository.Add(device)
 		savedDevice, _ := repository.DeviceOfId(device.ID)
 		assert.NotNil(t, savedDevice)
 	})
 
 	t.Run("It should save a device without sender id", func(t *testing.T) {
-		id, _ := uuid.NewV4()
-		device, _ := domain.NewDevice(id.String(), os, nil)
+		device, _ := domain.NewDevice(uuid.NewV4().String(), os, nil)
 		repository.Add(device)
 		savedDevice, _ := repository.DeviceOfId(device.ID)
 		assert.NotNil(t, savedDevice)
 	})
 
 	t.Run("It should return error on duplicate", func(t *testing.T) {
-		id, _ := uuid.NewV4()
-		device, _ := domain.NewDevice(id.String(), os, &senderId)
+		device, _ := domain.NewDevice(uuid.NewV4().String(), os, &senderId)
 		repository.Add(device)
 		err := repository.Add(device)
 		assert.Error(t, err)

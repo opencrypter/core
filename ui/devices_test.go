@@ -15,9 +15,8 @@ func TestPostDevice(t *testing.T) {
 	router := NewRouter()
 	senderId := "abc"
 	t.Run("It should create a device", func(t *testing.T) {
-		id, _ := uuid.NewV4()
 		device := domain.Device{
-			ID:       id.String(),
+			ID:       uuid.NewV4().String(),
 			Os:       "ios",
 			SenderId: &senderId,
 		}
@@ -59,9 +58,8 @@ func TestPostDevice(t *testing.T) {
 	})
 
 	t.Run("It should return conflict status code on duplicated device", func(t *testing.T) {
-		id, _ := uuid.NewV4()
 		device := domain.Device{
-			ID:       id.String(),
+			ID:       uuid.NewV4().String(),
 			Os:       "ios",
 			SenderId: &senderId,
 		}
