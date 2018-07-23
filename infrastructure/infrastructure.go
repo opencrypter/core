@@ -3,13 +3,12 @@ package infrastructure
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/joho/godotenv"
 	"github.com/opencrypter/api/domain"
 	"os"
 )
 
 func init() {
-	godotenv.Load("../.env")
+	MigrateDb()
 }
 
 // Opens a new repository connection.
