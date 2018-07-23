@@ -19,6 +19,7 @@ before_install:
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure -vendor-only
   - go get github.com/golang/mock/mockgen
+  - mkdir mock
   - mockgen -source=domain/device.go -destination mock/device_mock.go -package mock
   - go get -t -v ./...
 
