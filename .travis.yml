@@ -1,13 +1,33 @@
 language: go
 
+services:
+  - postgresql
+
 go:
+  - 1.9
   - tip
 
+env:
+  global:
+    - DB_NAME=opencrypter_test
+    - DB_PORT=5432
+    - DB_USER=postgres
+    - DB_HOST=127.0.0.1
+    - GIN_MODE=debug
+
 before_install:
+  - go get -u github.com/golang/dep/cmd/dep
+  - dep ensure -vendor-only
+  - go get github.com/golang/mock/mockgen
+  - mkdir mock
+  - mockgen -source=domain/device.go -destination mock/device_mock.go -package mock
   - go get -t -v ./...
 
+before_script:
+  - psql -c 'create database opencrypter_test;' -U postgres
+
 script:
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - go test ./... -covermode=atomic
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -16,6 +36,6 @@ notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/0c8ffc90bfa497096187
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # options: [always|never|change] default: always
+    on_success: always
+    on_failure: always
+    on_start: never
