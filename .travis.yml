@@ -19,11 +19,11 @@ before_install:
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure -vendor-only
   - go get github.com/golang/mock/mockgen
+  - mockgen -source=domain/device.go -destination mock/device_mock.go -package mock
   - go get -t -v ./...
 
 before_script:
   - psql -c 'create database opencrypter_test;' -U postgres
-  - mockgen -source=domain/device.go -destination mock/device_mock.go -package mock
 
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic
