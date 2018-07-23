@@ -8,16 +8,17 @@ go:
   - tip
 
 env:
-  - DB_NAME=opencrypter_test
-  - DB_NAME=5432
-  - DB_USER=postgres
-  - DB_HOST=127.0.0.1
-  - GIN_MODE=debug
+  global:
+    - DB_NAME=opencrypter_test
+    - DB_NAME=5432
+    - DB_USER=postgres
+    - DB_HOST=127.0.0.1
+    - GIN_MODE=debug
 
 before_install:
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure -vendor-only
-  - go install github.com/golang/mock/mockgen
+  - go get github.com/golang/mock/mockgen
   - go get -t -v ./...
 
 before_script:
