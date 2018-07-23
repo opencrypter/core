@@ -373,6 +373,9 @@ definitions:
   Error:
     type: object
     properties:
+      code:
+        type: integer
+        example: 0
       message:
         type: string
         example: "Error"
@@ -386,7 +389,7 @@ definitions:
       os:
         type: "string"
         example: "ios"
-      token:
+      senderId:
         type: "string"
         format: "base64"
         example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"
@@ -400,7 +403,7 @@ definitions:
       os:
         type: "string"
         example: "ios"
-      token:
+      senderId:
         type: "string"
         format: "base64"
         example: "5311839E985FA01B56E7AD74444C0157F7F71A2745D0FB50DED665E0E882"        
@@ -517,4 +520,4 @@ definitions:
         example: 0.12
       low:
         type: number
-        example: 0.0002
+        example: 0.0002                
