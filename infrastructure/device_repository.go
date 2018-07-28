@@ -27,7 +27,17 @@ func (r GormDeviceRepository) Add(device *domain.Device) error {
 
 func (r GormDeviceRepository) DeviceOfId(id string) (*domain.Device, error) {
 	var device domain.Device
-	r.database.Where("id = ?", id).First(&device)
-
+	err := r.database.Where("id = ?", id).First(&device).Error
+	if err != nil {
+		return nil, domain.NewDeviceNotFoundError(id)
+	}
 	return &device, nil
+}
+
+func (r GormDeviceRepository) Update(device *domain.Device) error {
+	err := r.database.Save(device).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

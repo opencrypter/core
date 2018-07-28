@@ -1,8 +1,9 @@
-package application
+package application_test
 
 import (
 	"errors"
 	"github.com/golang/mock/gomock"
+	"github.com/opencrypter/api/application"
 	"github.com/opencrypter/api/domain"
 	"github.com/opencrypter/api/mock"
 	"github.com/satori/go.uuid"
@@ -12,7 +13,7 @@ import (
 
 func TestCreateDevice_Execute(t *testing.T) {
 	mockedRepository := mock.NewMockDeviceRepository(gomock.NewController(t))
-	DeviceRepository = mockedRepository
+	application.DeviceRepository = mockedRepository
 	id := uuid.NewV4().String()
 	os := "ios"
 	senderId := "abc"
@@ -33,7 +34,7 @@ func TestCreateDevice_Execute(t *testing.T) {
 			EXPECT().
 			Add(expectedDevice)
 
-		device, _ := CreateDevice(id, os, &senderId)
+		device, _ := application.CreateDevice(id, os, &senderId)
 		assert.Equal(t, expectedDevice, device)
 	})
 
@@ -50,7 +51,7 @@ func TestCreateDevice_Execute(t *testing.T) {
 			Add(expectedDevice).
 			Return(errors.New("error"))
 
-		_, err := CreateDevice(id, os, &senderId)
+		_, err := application.CreateDevice(id, os, &senderId)
 		assert.Error(t, err)
 	})
 }

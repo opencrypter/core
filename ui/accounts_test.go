@@ -1,6 +1,7 @@
-package ui
+package ui_test
 
 import (
+	"github.com/opencrypter/api/ui"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -8,7 +9,7 @@ import (
 )
 
 func TestPutAccount(t *testing.T) {
-	router := NewRouter()
+	router := ui.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
@@ -19,7 +20,7 @@ func TestPutAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-	router := NewRouter()
+	router := ui.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
@@ -30,7 +31,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestGetBalances(t *testing.T) {
-	router := NewRouter()
+	router := ui.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()

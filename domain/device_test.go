@@ -1,6 +1,7 @@
-package domain
+package domain_test
 
 import (
+	"github.com/opencrypter/api/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -11,7 +12,7 @@ func TestNewDevice(t *testing.T) {
 	senderId := "abc"
 
 	t.Run("It should create a device", func(t *testing.T) {
-		device, _ := NewDevice(id, os, &senderId)
+		device, _ := domain.NewDevice(id, os, &senderId)
 		assert.Equal(t, id, device.ID)
 		assert.Equal(t, os, device.Os)
 		assert.Equal(t, &senderId, device.SenderId)
@@ -19,17 +20,17 @@ func TestNewDevice(t *testing.T) {
 	})
 
 	t.Run("It should work without sender id", func(t *testing.T) {
-		device, _ := NewDevice(id, os, nil)
+		device, _ := domain.NewDevice(id, os, nil)
 		assert.Nil(t, device.SenderId)
 	})
 
 	t.Run("It should return error on invalid id", func(t *testing.T) {
-		_, err := NewDevice("invalid", os, &senderId)
+		_, err := domain.NewDevice("invalid", os, &senderId)
 		assert.Error(t, err)
 	})
 
 	t.Run("It should return error on empty os", func(t *testing.T) {
-		_, err := NewDevice(id, "", &senderId)
+		_, err := domain.NewDevice(id, "", &senderId)
 		assert.Error(t, err)
 	})
 }
