@@ -14,7 +14,7 @@ func TestNewDevice(t *testing.T) {
 	t.Run("It should create a device", func(t *testing.T) {
 		device, _ := domain.NewDevice(id, os, &senderId)
 		assert.Equal(t, id, device.ID)
-		assert.Equal(t, os, device.Os)
+		assert.Equal(t, &os, device.Os)
 		assert.Equal(t, &senderId, device.SenderId)
 		assert.NotEmpty(t, device.Secret)
 	})

@@ -19,10 +19,11 @@ import (
 func TestPostDevice(t *testing.T) {
 	router := ui.NewRouter()
 	senderId := "abc"
+	os := "ios"
 	t.Run("It should create a device", func(t *testing.T) {
 		device := domain.Device{
 			ID:       uuid.NewV4().String(),
-			Os:       "ios",
+			Os:       &os,
 			SenderId: &senderId,
 		}
 
@@ -39,7 +40,7 @@ func TestPostDevice(t *testing.T) {
 	t.Run("It should return bad request on invalid device", func(t *testing.T) {
 		device := domain.Device{
 			ID:       "invalid",
-			Os:       "ios",
+			Os:       &os,
 			SenderId: &senderId,
 		}
 
@@ -65,7 +66,7 @@ func TestPostDevice(t *testing.T) {
 	t.Run("It should return conflict status code on duplicated device", func(t *testing.T) {
 		device := domain.Device{
 			ID:       uuid.NewV4().String(),
-			Os:       "ios",
+			Os:       &os,
 			SenderId: &senderId,
 		}
 
@@ -88,7 +89,9 @@ func TestPostDevice(t *testing.T) {
 
 func TestUpdateSenderId(t *testing.T) {
 	router := ui.NewRouter()
-	device := &domain.Device{ID: uuid.NewV4().String(), Os: "ios", Secret: "secret"}
+	os := "ios"
+	secret := "test"
+	device := &domain.Device{ID: uuid.NewV4().String(), Os: &os, Secret: &secret}
 	infrastructure.NewDeviceRepository().Add(device)
 
 	t.Run("It should update the sender id", func(t *testing.T) {

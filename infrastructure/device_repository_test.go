@@ -46,7 +46,9 @@ func TestGormDeviceRepository_DeviceOfId(t *testing.T) {
 	repository := infrastructure.NewDeviceRepository()
 	t.Run("It should find device", func(t *testing.T) {
 		senderId := "abc"
-		existingDevice := &domain.Device{ID: uuid.NewV4().String(), Secret: "secret", Os: "ios", SenderId: &senderId}
+		os := "ios"
+		secret := "test"
+		existingDevice := &domain.Device{ID: uuid.NewV4().String(), Secret: &secret, Os: &os, SenderId: &senderId}
 		repository.Add(existingDevice)
 
 		device, _ := repository.DeviceOfId(existingDevice.ID)
@@ -63,7 +65,9 @@ func TestGormDeviceRepository_Update(t *testing.T) {
 	repository := infrastructure.NewDeviceRepository()
 	t.Run("It should update device", func(t *testing.T) {
 		senderId := "abc"
-		existingDevice := &domain.Device{ID: uuid.NewV4().String(), Secret: "secret", Os: "ios", SenderId: &senderId}
+		os := "ios"
+		secret := "test"
+		existingDevice := &domain.Device{ID: uuid.NewV4().String(), Secret: &secret, Os: &os, SenderId: &senderId}
 		repository.Add(existingDevice)
 
 		otherSenderId := "other-sender-id"
@@ -76,7 +80,8 @@ func TestGormDeviceRepository_Update(t *testing.T) {
 	})
 
 	t.Run("It should return error on invalid device", func(t *testing.T) {
-		device := &domain.Device{ID: uuid.NewV4().String(), Os: "ios"}
+		os := "ios"
+		device := &domain.Device{ID: uuid.NewV4().String(), Os: &os}
 
 		err := repository.Update(device)
 		assert.Error(t, err)

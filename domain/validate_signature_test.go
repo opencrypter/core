@@ -13,7 +13,8 @@ import (
 func TestValidateSignature_Validate(t *testing.T) {
 	mockedRepository := mock.NewMockDeviceRepository(gomock.NewController(t))
 	service := domain.NewValidateSignature(mockedRepository)
-	device := &domain.Device{ID: uuid.NewV4().String(), Secret: "thisIsMySecret"}
+	secret := "thisIsMySecret"
+	device := &domain.Device{ID: uuid.NewV4().String(), Secret: &secret}
 
 	t.Run("It should validate a valid signature", func(t *testing.T) {
 		payload := "a random payload"

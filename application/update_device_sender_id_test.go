@@ -14,11 +14,15 @@ import (
 func TestUpdateDeviceSenderId_Execute(t *testing.T) {
 	mockedRepository := mock.NewMockDeviceRepository(gomock.NewController(t))
 	service := application.NewUpdateDeviceSenderId(mockedRepository)
+
+	newSenderId := "new"
+	senderId := "old"
+	os := "ios"
+	secret := "test"
+	device := &domain.Device{ID: uuid.NewV4().String(), Os: &os, SenderId: &senderId, Secret: &secret}
+
 	t.Run("It should update the sender id", func(t *testing.T) {
-		oldSenderId := "old"
-		senderId := "new"
-		device := &domain.Device{ID: uuid.NewV4().String(), Os: "ios", SenderId: &oldSenderId, Secret: "test"}
-		expected := &domain.Device{ID: device.ID, Os: device.Os, SenderId: &senderId, Secret: device.Secret}
+		expected := &domain.Device{ID: device.ID, Os: device.Os, SenderId: &newSenderId, Secret: device.Secret}
 
 		mockedRepository.
 			EXPECT().
@@ -29,7 +33,7 @@ func TestUpdateDeviceSenderId_Execute(t *testing.T) {
 			EXPECT().
 			Update(expected)
 
-		err := service.Execute(device.ID, senderId)
+		err := service.Execute(device.ID, newSenderId)
 		assert.NoError(t, err)
 	})
 
@@ -45,10 +49,7 @@ func TestUpdateDeviceSenderId_Execute(t *testing.T) {
 	})
 
 	t.Run("It should return an error on repository fail", func(t *testing.T) {
-		oldSenderId := "old"
-		senderId := "new"
-		device := &domain.Device{ID: uuid.NewV4().String(), Os: "ios", SenderId: &oldSenderId, Secret: "test"}
-		expected := &domain.Device{ID: device.ID, Os: device.Os, SenderId: &senderId, Secret: device.Secret}
+		expected := &domain.Device{ID: device.ID, Os: device.Os, SenderId: &newSenderId, Secret: device.Secret}
 
 		mockedRepository.
 			EXPECT().
@@ -60,7 +61,7 @@ func TestUpdateDeviceSenderId_Execute(t *testing.T) {
 			Update(expected).
 			Return(errors.New("error"))
 
-		err := service.Execute(device.ID, senderId)
+		err := service.Execute(device.ID, newSenderId)
 		assert.Error(t, err)
 	})
 }

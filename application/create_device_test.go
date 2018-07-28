@@ -17,17 +17,17 @@ func TestCreateDevice_Execute(t *testing.T) {
 	id := uuid.NewV4().String()
 	os := "ios"
 	senderId := "abc"
-
-	domain.GenerateSecret = func() string {
-		return "test"
+	secret := "test"
+	domain.GenerateSecret = func() *string {
+		return &secret
 	}
 
 	t.Run("It should create a new device", func(t *testing.T) {
 		expectedDevice := &domain.Device{
 			ID:       id,
-			Os:       os,
+			Os:       &os,
 			SenderId: &senderId,
-			Secret:   "test",
+			Secret:   &secret,
 		}
 
 		mockedRepository.
@@ -41,9 +41,9 @@ func TestCreateDevice_Execute(t *testing.T) {
 	t.Run("It should return an error on repository fail", func(t *testing.T) {
 		expectedDevice := &domain.Device{
 			ID:       id,
-			Os:       os,
+			Os:       &os,
 			SenderId: &senderId,
-			Secret:   "test",
+			Secret:   &secret,
 		}
 
 		mockedRepository.
