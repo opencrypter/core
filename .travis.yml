@@ -9,7 +9,7 @@ go:
 
 env:
   global:
-    - DB_NAME=opencrypter_test
+    - DB_NAME=opencrypter
     - DB_PORT=5432
     - DB_USER=postgres
     - DB_HOST=127.0.0.1
@@ -24,7 +24,7 @@ before_install:
   - go get -t -v ./...
 
 before_script:
-  - psql -c 'create database opencrypter_test;' -U postgres
+  - psql -c 'create database opencrypter;' -U postgres
 
 script:
   - go test ./... -covermode=atomic
