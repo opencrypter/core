@@ -89,7 +89,7 @@ func TestUpdateSenderId(t *testing.T) {
 
 		device, _ := infrastructure.NewDeviceRepository().DeviceOfId(suite.existingDevice.ID)
 		assert.Equal(t, http.StatusOK, recorder.Code)
-		assert.Equal(t, device.SenderId, dto.SenderId)
+		assert.Equal(t, &dto.SenderId, device.SenderId)
 	})
 
 	t.Run("It should return error on missing device", func(t *testing.T) {

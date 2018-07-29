@@ -41,16 +41,15 @@ func TestPutAccount(t *testing.T) {
 	})
 
 	t.Run("It should return bad request on invalid account", func(t *testing.T) {
-		dto := ui.AccountDto{Id: "invalid"}
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&dto)
+		json.NewEncoder(buffer).Encode(&ui.AccountDto{Id: "invalid"})
 
 		request := createAuthenticatedRequest(requestData{
 			device: suite.existingDevice,
 			buffer: buffer,
 			method: "PUT",
-			path:   "/accounts/" + dto.Id,
+			path:   "/accounts/invalid",
 		})
 		router.ServeHTTP(recorder, request)
 		assert.Equal(t, http.StatusBadRequest, recorder.Code)
