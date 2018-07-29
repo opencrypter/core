@@ -74,13 +74,11 @@ func TestPostDevice(t *testing.T) {
 
 func TestUpdateSenderId(t *testing.T) {
 	router := ui.NewRouter()
+	dto := &ui.SenderIdDto{SenderId: "sender-id"}
 	t.Run("It should update the sender id", func(t *testing.T) {
-		senderId := "sender-id"
-		dto := ui.SenderIdDto{SenderId: senderId}
-
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&dto)
+		json.NewEncoder(buffer).Encode(dto)
 		request := createAuthenticatedRequest(requestData{
 			device: suite.existingDevice,
 			buffer: buffer,
@@ -91,12 +89,10 @@ func TestUpdateSenderId(t *testing.T) {
 
 		device, _ := infrastructure.NewDeviceRepository().DeviceOfId(suite.existingDevice.ID)
 		assert.Equal(t, http.StatusOK, recorder.Code)
-		assert.Equal(t, device.SenderId, &senderId)
+		assert.Equal(t, device.SenderId, dto.SenderId)
 	})
 
 	t.Run("It should return error on missing device", func(t *testing.T) {
-		dto := ui.SenderIdDto{SenderId: "sender-id"}
-
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
@@ -111,12 +107,9 @@ func TestUpdateSenderId(t *testing.T) {
 	})
 
 	t.Run("It should return a forbidden error on missing credentials", func(t *testing.T) {
-		senderId := "sender-id"
-		dto := ui.SenderIdDto{SenderId: senderId}
-
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&dto)
+		json.NewEncoder(buffer).Encode(dto)
 		request, _ := http.NewRequest("PATCH", "/devices/"+suite.existingDevice.ID, buffer)
 		router.ServeHTTP(recorder, request)
 
@@ -124,12 +117,9 @@ func TestUpdateSenderId(t *testing.T) {
 	})
 
 	t.Run("It should return a forbidden error on invalid signature", func(t *testing.T) {
-		senderId := "sender-id"
-		dto := ui.SenderIdDto{SenderId: senderId}
-
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&dto)
+		json.NewEncoder(buffer).Encode(dto)
 		request := createAuthenticatedRequest(requestData{
 			device: suite.existingDevice,
 			buffer: buffer,
