@@ -127,6 +127,35 @@ func TestUpdateSenderId(t *testing.T) {
 
 		assert.Equal(t, http.StatusNotFound, recorder.Code)
 	})
+
+	t.Run("It should return a forbidden error on missing credentials", func(t *testing.T) {
+		senderId := "sender-id"
+		dto := ui.SenderIdDto{SenderId: senderId}
+
+		recorder := httptest.NewRecorder()
+		buffer := new(bytes.Buffer)
+		json.NewEncoder(buffer).Encode(&dto)
+		request, _ := http.NewRequest("PATCH", "/devices/"+device.ID, buffer)
+		router.ServeHTTP(recorder, request)
+
+		assert.Equal(t, http.StatusForbidden, recorder.Code)
+	})
+
+	t.Run("It should return a forbidden error on invalid signature", func(t *testing.T) {
+		senderId := "sender-id"
+		dto := ui.SenderIdDto{SenderId: senderId}
+
+		recorder := httptest.NewRecorder()
+		buffer := new(bytes.Buffer)
+		json.NewEncoder(buffer).Encode(&dto)
+		request, _ := http.NewRequest("PATCH", "/devices/"+device.ID, buffer)
+		request.Header.Set("X-Api-Id", device.ID)
+		request.Header.Set("Date", time.Now().Format(time.RFC1123))
+		request.Header.Set("X-Signature", "invalid")
+		router.ServeHTTP(recorder, request)
+
+		assert.Equal(t, http.StatusForbidden, recorder.Code)
+	})
 }
 
 func buildSignature(request *http.Request, device domain.Device) string {
