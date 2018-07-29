@@ -1,14 +1,15 @@
-package infrastructure
+package infrastructure_test
 
 import (
 	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/api/infrastructure"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestGormAccountRepository_Save(t *testing.T) {
-	repository := NewAccountRepository()
+	repository := infrastructure.NewAccountRepository()
 
 	name := "test"
 	exchangeId := uuid.NewV4().String()

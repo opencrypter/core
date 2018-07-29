@@ -9,6 +9,6 @@ type Account struct {
 }
 
 type AccountRepository interface {
-	Save(device *Device) error
+	Save(account *Account) error
 	AccountOfId(id string) (*Account, error)
 }
