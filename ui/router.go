@@ -19,7 +19,7 @@ func NewRouter() *gin.Engine {
 	router.Group("/devices/:id", authenticator()).
 		PATCH("", UpdateSenderId)
 
-	router.Group("/accounts").
+	router.Group("/accounts", authenticator()).
 		PUT("/:id", PutAccount).
 		GET("/:id", GetAccount).
 		GET("/:id/balances", GetBalances)

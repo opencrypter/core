@@ -8,12 +8,9 @@ import (
 	"github.com/opencrypter/api/ui"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
-	"time"
 )
 
 func TestPostDevice(t *testing.T) {
@@ -64,21 +61,9 @@ func TestPostDevice(t *testing.T) {
 	})
 
 	t.Run("It should return conflict status code on duplicated device", func(t *testing.T) {
-		device := domain.Device{
-			ID:       uuid.NewV4().String(),
-			Os:       &os,
-			SenderId: &senderId,
-		}
-
-		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&device)
-		request, _ := http.NewRequest("POST", "/devices", buffer)
-		request.Header.Set("Content-Type", "application/json")
-		router.ServeHTTP(httptest.NewRecorder(), request)
-
 		recorder := httptest.NewRecorder()
-		buffer = new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&device)
+		buffer := new(bytes.Buffer)
+		json.NewEncoder(buffer).Encode(suite.existingDevice)
 		duplicatedRequest, _ := http.NewRequest("POST", "/devices", buffer)
 		duplicatedRequest.Header.Set("Content-Type", "application/json")
 		router.ServeHTTP(recorder, duplicatedRequest)
@@ -89,11 +74,6 @@ func TestPostDevice(t *testing.T) {
 
 func TestUpdateSenderId(t *testing.T) {
 	router := ui.NewRouter()
-	os := "ios"
-	secret := "test"
-	device := &domain.Device{ID: uuid.NewV4().String(), Os: &os, Secret: &secret}
-	infrastructure.NewDeviceRepository().Add(device)
-
 	t.Run("It should update the sender id", func(t *testing.T) {
 		senderId := "sender-id"
 		dto := ui.SenderIdDto{SenderId: senderId}
@@ -101,14 +81,15 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
-		request, _ := http.NewRequest("PATCH", "/devices/"+device.ID, buffer)
-		request.Header.Set("X-Api-Id", device.ID)
-		request.Header.Set("Date", time.Now().Format(time.RFC1123))
-		request.Header.Set("X-Signature", buildSignature(request, *device))
+		request := createAuthenticatedRequest(requestData{
+			device: suite.existingDevice,
+			buffer: buffer,
+			method: "PATCH",
+			path:   "/devices/" + suite.existingDevice.ID,
+		})
 		router.ServeHTTP(recorder, request)
 
-		device, _ := infrastructure.NewDeviceRepository().DeviceOfId(device.ID)
-
+		device, _ := infrastructure.NewDeviceRepository().DeviceOfId(suite.existingDevice.ID)
 		assert.Equal(t, http.StatusOK, recorder.Code)
 		assert.Equal(t, device.SenderId, &senderId)
 	})
@@ -119,12 +100,13 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
-		request, _ := http.NewRequest("PATCH", "/devices/"+uuid.NewV4().String(), buffer)
-		request.Header.Set("X-Api-Id", device.ID)
-		request.Header.Set("Date", time.Now().Format(time.RFC1123))
-		request.Header.Set("X-Signature", buildSignature(request, *device))
+		request := createAuthenticatedRequest(requestData{
+			device: suite.existingDevice,
+			buffer: buffer,
+			method: "PATCH",
+			path:   "/devices/" + uuid.NewV4().String(),
+		})
 		router.ServeHTTP(recorder, request)
-
 		assert.Equal(t, http.StatusNotFound, recorder.Code)
 	})
 
@@ -135,7 +117,7 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
-		request, _ := http.NewRequest("PATCH", "/devices/"+device.ID, buffer)
+		request, _ := http.NewRequest("PATCH", "/devices/"+suite.existingDevice.ID, buffer)
 		router.ServeHTTP(recorder, request)
 
 		assert.Equal(t, http.StatusForbidden, recorder.Code)
@@ -148,23 +130,15 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
-		request, _ := http.NewRequest("PATCH", "/devices/"+device.ID, buffer)
-		request.Header.Set("X-Api-Id", device.ID)
-		request.Header.Set("Date", time.Now().Format(time.RFC1123))
+		request := createAuthenticatedRequest(requestData{
+			device: suite.existingDevice,
+			buffer: buffer,
+			method: "PATCH",
+			path:   "/devices/" + suite.existingDevice.ID,
+		})
 		request.Header.Set("X-Signature", "invalid")
 		router.ServeHTTP(recorder, request)
 
 		assert.Equal(t, http.StatusForbidden, recorder.Code)
 	})
-}
-
-func buildSignature(request *http.Request, device domain.Device) string {
-	bodyBytes, _ := ioutil.ReadAll(request.Body)
-	request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-	date := request.Header.Get("Date")
-	payload := request.Method + request.URL.Path + request.URL.RawQuery + string(bodyBytes) + date
-	payload = strings.Replace(payload, " ", "", -1)
-
-	s := device.Sign(payload)
-	return s
 }
