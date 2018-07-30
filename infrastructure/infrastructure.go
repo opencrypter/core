@@ -57,5 +57,6 @@ func MigrateDb() {
 	repository.AutoMigrate(
 		domain.Device{},
 		domain.Account{},
+		domain.Exchange{},
 	)
 }
