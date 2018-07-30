@@ -17,17 +17,24 @@ type AccountDto struct {
 
 func PutAccount(context *gin.Context) {
 	service := application.NewSaveAccount(infrastructure.NewAccountRepository())
-
+	deviceId := context.Request.Header.Get("X-Api-Id")
 	var dto AccountDto
 	err := context.BindJSON(&dto)
 	if err == nil {
-		err = service.Execute(dto.Id, dto.ExchangeId, dto.Name, dto.ApiKey, dto.ApiSecret)
+		err = service.Execute(dto.Id, &deviceId, dto.ExchangeId, dto.Name, dto.ApiKey, dto.ApiSecret)
 	}
 	if err != nil {
 		apiError(context, err)
 		return
 	}
 	apiSuccess(context, http.StatusOK, "")
+}
+
+func GetAllAccounts(context *gin.Context) {
+	service := application.NewGetAllAccounts(infrastructure.NewAccountRepository())
+	deviceId := context.Request.Header.Get("X-Api-Id")
+	devices := service.Execute(deviceId)
+	apiSuccess(context, http.StatusOK, devices)
 }
 
 func GetAccount(context *gin.Context) {

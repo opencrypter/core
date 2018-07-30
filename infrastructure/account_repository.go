@@ -25,3 +25,9 @@ func (r GormAccountRepository) AccountOfId(id string) (*domain.Account, error) {
 	}
 	return &account, nil
 }
+
+func (r GormAccountRepository) AllOfDeviceId(deviceId string) []domain.Account {
+	accounts := make([]domain.Account, 0)
+	r.database.Where("device_id = ?", deviceId).Find(&accounts)
+	return accounts
+}

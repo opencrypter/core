@@ -79,8 +79,7 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(dto)
-		request := createAuthenticatedRequest(requestData{
-			device: suite.existingDevice,
+		request := suite.newAuthenticatedRequest(requestData{
 			buffer: buffer,
 			method: "PATCH",
 			path:   "/devices/" + suite.existingDevice.ID,
@@ -96,8 +95,7 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
-		request := createAuthenticatedRequest(requestData{
-			device: suite.existingDevice,
+		request := suite.newAuthenticatedRequest(requestData{
 			buffer: buffer,
 			method: "PATCH",
 			path:   "/devices/" + uuid.NewV4().String(),
@@ -112,7 +110,6 @@ func TestUpdateSenderId(t *testing.T) {
 		json.NewEncoder(buffer).Encode(dto)
 		request, _ := http.NewRequest("PATCH", "/devices/"+suite.existingDevice.ID, buffer)
 		router.ServeHTTP(recorder, request)
-
 		assert.Equal(t, http.StatusForbidden, recorder.Code)
 	})
 
@@ -120,15 +117,13 @@ func TestUpdateSenderId(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(dto)
-		request := createAuthenticatedRequest(requestData{
-			device: suite.existingDevice,
+		request := suite.newAuthenticatedRequest(requestData{
 			buffer: buffer,
 			method: "PATCH",
 			path:   "/devices/" + suite.existingDevice.ID,
 		})
 		request.Header.Set("X-Signature", "invalid")
 		router.ServeHTTP(recorder, request)
-
 		assert.Equal(t, http.StatusForbidden, recorder.Code)
 	})
 }
