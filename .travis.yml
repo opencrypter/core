@@ -4,7 +4,6 @@ services:
   - postgresql
 
 go:
-  - 1.9
   - tip
 
 env:
