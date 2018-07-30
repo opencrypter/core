@@ -11,7 +11,7 @@ type GormDeviceRepository struct {
 }
 
 func NewDeviceRepository() *GormDeviceRepository {
-	return &GormDeviceRepository{database: openDb()}
+	return &GormDeviceRepository{database: Database}
 }
 
 func (r GormDeviceRepository) Add(device *domain.Device) error {

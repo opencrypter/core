@@ -10,7 +10,7 @@ type GormExchangeRepository struct {
 }
 
 func NewExchangeRepository() GormExchangeRepository {
-	return GormExchangeRepository{database: openDb()}
+	return GormExchangeRepository{database: Database}
 }
 
 func (r GormExchangeRepository) All() []domain.Exchange {

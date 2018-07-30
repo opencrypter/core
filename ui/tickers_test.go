@@ -13,7 +13,10 @@ func TestGetExchangeTickers(t *testing.T) {
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
-		request, _ := http.NewRequest("GET", "/exchanges/100cfe0b-78be-42c2-ba42-95d1f2c67336/tickers", nil)
+		request := suite.newAuthenticatedRequest(requestData{
+			method: "GET",
+			path:   "/exchanges/100cfe0b-78be-42c2-ba42-95d1f2c67336/tickers",
+		})
 		router.ServeHTTP(responseRecorder, request)
 		assert.Equal(t, http.StatusNotImplemented, responseRecorder.Code)
 	})
@@ -23,10 +26,13 @@ func TestGetTickerAlerts(t *testing.T) {
 	router := ui.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
-		responseRecorder := httptest.NewRecorder()
-		request, _ := http.NewRequest("GET", "/tickers/100cfe0b-78be-42c2-ba42-95d1f2c67336/alerts", nil)
-		router.ServeHTTP(responseRecorder, request)
-		assert.Equal(t, http.StatusNotImplemented, responseRecorder.Code)
+		recorder := httptest.NewRecorder()
+		request := suite.newAuthenticatedRequest(requestData{
+			method: "GET",
+			path:   "/tickers/100cfe0b-78be-42c2-ba42-95d1f2c67336/alerts",
+		})
+		router.ServeHTTP(recorder, request)
+		assert.Equal(t, http.StatusNotImplemented, recorder.Code)
 	})
 }
 

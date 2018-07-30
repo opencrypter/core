@@ -8,7 +8,10 @@ import (
 	"os"
 )
 
+var Database *gorm.DB
+
 func init() {
+	Database = openDb()
 	MigrateDb()
 }
 

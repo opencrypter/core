@@ -25,7 +25,7 @@ func NewRouter() *gin.Engine {
 		GET("/:id", GetAccount).
 		GET("/:id/balances", GetBalances)
 
-	router.Group("/exchanges").
+	router.Group("/exchanges", authenticator()).
 		GET("", GetExchanges).
 		GET("/:id", GetExchangeDetail).
 		GET("/:id/tickers", GetExchangeTickers)
