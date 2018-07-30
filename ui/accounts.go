@@ -30,6 +30,13 @@ func PutAccount(context *gin.Context) {
 	apiSuccess(context, http.StatusOK, "")
 }
 
+func GetAllAccounts(context *gin.Context) {
+	service := application.NewGetAllAccounts(infrastructure.NewAccountRepository())
+	deviceId := context.Request.Header.Get("X-Api-Id")
+	devices := service.Execute(deviceId)
+	apiSuccess(context, http.StatusOK, devices)
+}
+
 func GetAccount(context *gin.Context) {
 	context.JSON(http.StatusNotImplemented, Error{Message: "Not implemented"})
 }

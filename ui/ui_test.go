@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-var suite UiSuite
+var suite testSuite
 
-type UiSuite struct {
+type testSuite struct {
 	existingDevice *domain.Device
 }
 
@@ -29,7 +29,7 @@ func init() {
 	secret := "D9pokn8rL/g29+OwxEKY/BwUmvv0yJlvuSQnrkHkZJuTTKSVmRt4UrhV"
 	senderId := "sender-id"
 
-	suite = UiSuite{existingDevice: &domain.Device{
+	suite = testSuite{existingDevice: &domain.Device{
 		ID:       uuid.NewV4().String(),
 		Os:       &os,
 		SenderId: &senderId,
@@ -38,7 +38,13 @@ func init() {
 	infrastructure.NewDeviceRepository().Add(suite.existingDevice)
 }
 
-func createAuthenticatedRequest(request requestData) *http.Request {
+func (testSuite) newAuthenticatedRequest(request requestData) *http.Request {
+	if request.device == nil {
+		request.device = suite.existingDevice
+	}
+	if request.buffer == nil {
+		request.buffer = new(bytes.Buffer)
+	}
 	infrastructure.NewDeviceRepository().Update(request.device)
 	r, _ := http.NewRequest(request.method, request.path, request.buffer)
 	r.Header.Set("X-Api-Id", request.device.ID)
