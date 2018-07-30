@@ -514,6 +514,9 @@ definitions:
       name:
         type: "string"
         example: Binance
+      tag:
+        type: "string"
+        example: binance
   Balance:
     type: "object"
     properties:
