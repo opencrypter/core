@@ -21,6 +21,7 @@ before_install:
   - mkdir mock
   - mockgen -source=domain/device.go -destination mock/device_mock.go -package mock
   - mockgen -source=domain/account.go -destination mock/account_mock.go -package mock
+  - mockgen -source=domain/exchange.go -destination mock/exchange_mock.go -package mock
   - go get -t -v ./...
 
 before_script:

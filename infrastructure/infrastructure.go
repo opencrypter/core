@@ -8,7 +8,10 @@ import (
 	"os"
 )
 
+var Database *gorm.DB
+
 func init() {
+	Database = openDb()
 	MigrateDb()
 }
 
@@ -57,5 +60,6 @@ func MigrateDb() {
 	repository.AutoMigrate(
 		domain.Device{},
 		domain.Account{},
+		domain.Exchange{},
 	)
 }

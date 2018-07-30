@@ -10,7 +10,7 @@ type GormAccountRepository struct {
 }
 
 func NewAccountRepository() *GormAccountRepository {
-	return &GormAccountRepository{database: openDb()}
+	return &GormAccountRepository{database: Database}
 }
 
 func (r GormAccountRepository) Save(device *domain.Account) error {

@@ -1,7 +1,6 @@
 package infrastructure_test
 
 import (
-	"fmt"
 	"github.com/opencrypter/api/domain"
 	"github.com/opencrypter/api/infrastructure"
 	"github.com/satori/go.uuid"
@@ -27,8 +26,7 @@ func TestGormAccountRepository_Save(t *testing.T) {
 	})
 
 	t.Run("It should save an existing account", func(t *testing.T) {
-		err := repository.Save(account)
-		fmt.Println(err)
+		repository.Save(account)
 		newName := "new-name"
 		account.Name = &newName
 		repository.Save(account)
