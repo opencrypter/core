@@ -120,15 +120,27 @@ func TestGetAccount(t *testing.T) {
 
 func TestGetBalances(t *testing.T) {
 	router := ui.NewRouter()
-
-	t.Run("It should return not implemented status code", func(t *testing.T) {
+	account := domain.NewAccount(uuid.NewV4().String(), uuid.NewV4().String(), uuid.NewV4().String(), "first", "api-key", "secret")
+	balance := domain.NewBalance(uuid.NewV4().String(), account.ID, uuid.NewV4().String(), 10, false)
+	account.Balances = []domain.Balance{*balance}
+	infrastructure.NewAccountRepository().Save(account)
+	t.Run("It should return balances", func(t *testing.T) {
+		expected, _ := json.Marshal(account.Balances)
 		recorder := httptest.NewRecorder()
 		request := suite.newAuthenticatedRequest(requestData{
 			method: "GET",
-			path:   "/accounts/100cfe0b-78be-42c2-ba42-95d1f2c67336/balances",
+			path:   "/accounts/" + account.ID + "/balances",
 		})
 		router.ServeHTTP(recorder, request)
-		assert.Equal(t, http.StatusNotImplemented, recorder.Code)
+		assert.Equal(t, http.StatusOK, recorder.Code)
+		assert.JSONEq(t, string(expected), recorder.Body.String())
+	})
+
+	t.Run("It should return error no missing account", func(t *testing.T) {
+		recorder := httptest.NewRecorder()
+		request := suite.newAuthenticatedRequest(requestData{method: "GET", path: "/accounts/100cfe0b-78be-42c2-ba42-95d1f2c67336/balances"})
+		router.ServeHTTP(recorder, request)
+		assert.Equal(t, http.StatusNotFound, recorder.Code)
 	})
 
 	t.Run("It should return forbidden on missing credentials", func(t *testing.T) {

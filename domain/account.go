@@ -12,9 +12,9 @@ type Account struct {
 
 type Balance struct {
 	ID         string
-	AccountID  *string `gorm:"type:uuid"`
+	AccountID  *string `gorm:"type:uuid;not null"`
 	Currency   *Currency
-	CurrencyID *string  `gorm:"not null"`
+	CurrencyID *string  `gorm:"type:uuid;not null"`
 	Volume     *float64 `gorm:"not null"`
 	HasAlert   *bool    `gorm:"has_alert:false;not null"`
 }
