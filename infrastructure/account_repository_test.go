@@ -8,19 +8,28 @@ import (
 	"testing"
 )
 
+func TestGormAccountRepository_AccountOfId(t *testing.T) {
+	repository := infrastructure.NewAccountRepository()
+	account := domain.NewAccount(uuid.NewV4().String(), uuid.NewV4().String(), uuid.NewV4().String(), "first", "api-key", "secret")
+	currency := domain.NewCurrency(uuid.NewV4().String(), "Bitcoin", "BTC")
+	balance := domain.NewBalance(uuid.NewV4().String(), account.ID, currency.ID, 10, false)
+	balance.Currency = currency
+	account.Balances = []domain.Balance{*balance}
+	repository.Save(account)
+
+	t.Run("It should return the account with its balances", func(t *testing.T) {
+		result, err := repository.AccountOfId(account.ID)
+		assert.NoError(t, err)
+		assert.Equal(t, account, result)
+	})
+}
+
 func TestGormAccountRepository_Save(t *testing.T) {
 	repository := infrastructure.NewAccountRepository()
-
-	name := "test"
-	exchangeId := uuid.NewV4().String()
-	deviceId := uuid.NewV4().String()
-	apiKey := "api-key"
-	apiSecret := "api-secret"
-	account := domain.NewAccount(uuid.NewV4().String(), deviceId, exchangeId, name, apiKey, apiSecret)
+	account := domain.NewAccount(uuid.NewV4().String(), uuid.NewV4().String(), uuid.NewV4().String(), "first", "api-key", "secret")
 
 	t.Run("It should save a new account", func(t *testing.T) {
 		repository.Save(account)
-
 		savedAccount, _ := repository.AccountOfId(account.ID)
 		assert.NotNil(t, savedAccount)
 	})
@@ -38,7 +47,6 @@ func TestGormAccountRepository_Save(t *testing.T) {
 
 	t.Run("It should return an error on receive an invalid account", func(t *testing.T) {
 		account := &domain.Account{ID: uuid.NewV4().String()}
-
 		assert.Error(t, repository.Save(account))
 		_, err := repository.AccountOfId(account.ID)
 		assert.Error(t, err)
@@ -48,12 +56,8 @@ func TestGormAccountRepository_Save(t *testing.T) {
 func TestGormAccountRepository_AllOfDeviceId(t *testing.T) {
 	repository := infrastructure.NewAccountRepository()
 	deviceId := uuid.NewV4().String()
-	repository.Save(
-		domain.NewAccount(uuid.NewV4().String(), deviceId, uuid.NewV4().String(), "first", "api-key", "secret"),
-	)
-	repository.Save(
-		domain.NewAccount(uuid.NewV4().String(), deviceId, uuid.NewV4().String(), "second", "api-key", "secret"),
-	)
+	repository.Save(domain.NewAccount(uuid.NewV4().String(), deviceId, uuid.NewV4().String(), "first", "api-key", "secret"))
+	repository.Save(domain.NewAccount(uuid.NewV4().String(), deviceId, uuid.NewV4().String(), "second", "api-key", "secret"))
 
 	t.Run("It should return all device accounts", func(t *testing.T) {
 		devices := repository.AllOfDeviceId(deviceId)

@@ -61,5 +61,11 @@ func MigrateDb() {
 		domain.Device{},
 		domain.Account{},
 		domain.Exchange{},
+		domain.Currency{},
+		domain.Balance{},
+		domain.Account{},
 	)
+
+	repository.Model(&domain.Balance{}).AddForeignKey("account_id", "accounts(id)", "RESTRICT", "RESTRICT")
+	repository.Model(&domain.Balance{}).AddForeignKey("currency_id", "currencies(id)", "RESTRICT", "RESTRICT")
 }

@@ -42,5 +42,13 @@ func GetAccount(context *gin.Context) {
 }
 
 func GetBalances(context *gin.Context) {
-	context.JSON(http.StatusNotImplemented, Error{Message: "Not implemented"})
+	service := application.NewGetBalances(infrastructure.NewAccountRepository())
+	id := context.Param("id")
+	balances, err := service.Execute(id)
+	if err != nil {
+		apiError(context, err)
+		return
+	}
+
+	apiSuccess(context, http.StatusOK, balances)
 }

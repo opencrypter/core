@@ -23,3 +23,18 @@ func TestNewAccount(t *testing.T) {
 	assert.Equal(t, &apiKey, account.ApiKey)
 	assert.Equal(t, &apiSecret, account.ApiSecret)
 }
+
+func TestNewBalance(t *testing.T) {
+	id := uuid.NewV4().String()
+	accountId := uuid.NewV4().String()
+	currencyId := uuid.NewV4().String()
+	volume := 100.5
+	hasAlert := true
+
+	balance := domain.NewBalance(id, accountId, currencyId, volume, hasAlert)
+	assert.Equal(t, id, balance.ID)
+	assert.Equal(t, &accountId, balance.AccountID)
+	assert.Equal(t, &currencyId, balance.CurrencyID)
+	assert.Equal(t, &volume, balance.Volume)
+	assert.Equal(t, &hasAlert, balance.HasAlert)
+}

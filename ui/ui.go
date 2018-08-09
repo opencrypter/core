@@ -33,7 +33,7 @@ func abortWithError(context *gin.Context, err error) {
 		code = http.StatusBadRequest
 	case domain.DuplicatedDeviceError:
 		code = http.StatusConflict
-	case domain.DeviceNotFoundError:
+	case domain.DeviceNotFoundError, domain.AccountNotFoundError:
 		code = http.StatusNotFound
 	}
 

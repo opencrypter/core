@@ -7,6 +7,7 @@ import (
 )
 
 type DeviceNotFoundError struct{ error }
+type AccountNotFoundError struct{ error }
 type InvalidDeviceError struct{ error }
 type DuplicatedDeviceError struct{ error }
 type InvalidSignatureError struct{ error }
@@ -16,6 +17,11 @@ type InvalidSignatureDateError struct{ error }
 // Error about missing device.
 func NewDeviceNotFoundError(id string) DeviceNotFoundError {
 	return DeviceNotFoundError{error: errors.New(fmt.Sprintf("device %s not found", id))}
+}
+
+// Error about missing account.
+func NewAccountNotFoundError(id string) AccountNotFoundError {
+	return AccountNotFoundError{error: errors.New(fmt.Sprintf("account %s not found", id))}
 }
 
 // Error about invalid device.
