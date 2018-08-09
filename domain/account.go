@@ -1,12 +1,22 @@
 package domain
 
 type Account struct {
-	ID         string  `gorm:"primary_key;type:uuid";json:"id"`
-	DeviceId   *string `gorm:"type:uuid;not null";json:"deviceId"`
-	ExchangeId *string `gorm:"type:uuid;not null";json:"exchangeId"`
-	Name       *string `gorm:"type:varchar;not null";json:"name"`
-	ApiKey     *string `gorm:"not null";json:"apiKey"`
-	ApiSecret  *string `gorm:"not null";json:"apiSecret"`
+	ID         string  `gorm:"primary_key;type:uuid"`
+	DeviceId   *string `gorm:"type:uuid;not null"`
+	ExchangeId *string `gorm:"type:uuid;not null"`
+	Name       *string `gorm:"type:varchar;not null"`
+	ApiKey     *string `gorm:"not null"`
+	ApiSecret  *string `gorm:"not null"`
+	Balances   []Balance
+}
+
+type Balance struct {
+	ID         string
+	AccountID  *string `gorm:"type:uuid"`
+	Currency   *Currency
+	CurrencyID *string  `gorm:"not null"`
+	Volume     *float64 `gorm:"not null"`
+	HasAlert   *bool    `gorm:"has_alert:false;not null"`
 }
 
 func NewAccount(id string, deviceId string, exchangeId string, name string, apiKey string, apiSecret string) *Account {
@@ -17,6 +27,16 @@ func NewAccount(id string, deviceId string, exchangeId string, name string, apiK
 		Name:       &name,
 		ApiKey:     &apiKey,
 		ApiSecret:  &apiSecret,
+	}
+}
+
+func NewBalance(id string, accountId string, currencyId string, volume float64, hasAlert bool) *Balance {
+	return &Balance{
+		ID:         id,
+		AccountID:  &accountId,
+		CurrencyID: &currencyId,
+		Volume:     &volume,
+		HasAlert:   &hasAlert,
 	}
 }
 

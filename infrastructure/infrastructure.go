@@ -61,5 +61,8 @@ func MigrateDb() {
 		domain.Device{},
 		domain.Account{},
 		domain.Exchange{},
+		domain.Currency{},
+		domain.Balance{},
+		domain.Account{},
 	)
 }
