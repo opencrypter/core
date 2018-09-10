@@ -2,8 +2,8 @@ package ui_test
 
 import (
 	"bytes"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/infrastructure"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/infrastructure"
 	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"

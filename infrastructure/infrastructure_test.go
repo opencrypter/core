@@ -1,7 +1,7 @@
 package infrastructure_test
 
 import (
-	"github.com/opencrypter/api/infrastructure"
+	"github.com/opencrypter/core/infrastructure"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"

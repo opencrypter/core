@@ -3,9 +3,9 @@ package application_test
 import (
 	"errors"
 	"github.com/golang/mock/gomock"
-	"github.com/opencrypter/api/application"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/mock"
+	"github.com/opencrypter/core/application"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/mock"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"

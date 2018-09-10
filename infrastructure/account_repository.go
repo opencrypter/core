@@ -2,7 +2,7 @@ package infrastructure
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/core/domain"
 )
 
 type GormAccountRepository struct {

@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/core/domain"
 )
 
 var DeviceRepository domain.DeviceRepository

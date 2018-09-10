@@ -1,7 +1,7 @@
 package domain_test
 
 import (
-	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/core/domain"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"

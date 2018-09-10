@@ -1,8 +1,8 @@
 package infrastructure_test
 
 import (
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/infrastructure"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/infrastructure"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"

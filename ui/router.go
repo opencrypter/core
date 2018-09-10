@@ -3,8 +3,8 @@ package ui
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/infrastructure"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/infrastructure"
 	"net/http"
 	"strings"
 	"time"

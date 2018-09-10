@@ -3,7 +3,7 @@ package ui
 import (
 	"bytes"
 	"github.com/gin-gonic/gin"
-	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/core/domain"
 	"io/ioutil"
 	"net/http"
 )

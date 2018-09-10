@@ -2,9 +2,9 @@ package ui_test
 
 import (
 	"github.com/gin-gonic/gin/json"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/infrastructure"
-	"github.com/opencrypter/api/ui"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/infrastructure"
+	"github.com/opencrypter/core/ui"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"net/http"

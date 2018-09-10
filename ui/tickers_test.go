@@ -1,7 +1,7 @@
 package ui_test
 
 import (
-	"github.com/opencrypter/api/ui"
+	"github.com/opencrypter/core/ui"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

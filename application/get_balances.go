@@ -1,6 +1,6 @@
 package application
 
-import "github.com/opencrypter/api/domain"
+import "github.com/opencrypter/core/domain"
 
 type GetBalances struct {
 	repository domain.AccountRepository

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/opencrypter/api/ui"
+	"github.com/opencrypter/core/ui"
 )
 
 func main() {

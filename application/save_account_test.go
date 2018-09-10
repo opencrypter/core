@@ -2,9 +2,9 @@ package application_test
 
 import (
 	"github.com/golang/mock/gomock"
-	"github.com/opencrypter/api/application"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/mock"
+	"github.com/opencrypter/core/application"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/mock"
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
 	"testing"

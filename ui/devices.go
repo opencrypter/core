@@ -2,9 +2,9 @@ package ui
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/opencrypter/api/application"
-	"github.com/opencrypter/api/domain"
-	"github.com/opencrypter/api/infrastructure"
+	"github.com/opencrypter/core/application"
+	"github.com/opencrypter/core/domain"
+	"github.com/opencrypter/core/infrastructure"
 	"net/http"
 )
 

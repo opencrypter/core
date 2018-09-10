@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/opencrypter/api/domain"
+	"github.com/opencrypter/core/domain"
 	"os"
 )
 
