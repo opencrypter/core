@@ -59,6 +59,8 @@ func buildSignature(request *http.Request, device domain.Device) string {
 	request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 	date := request.Header.Get("Date")
 	payload := request.Method + request.URL.Path + request.URL.RawQuery + string(bodyBytes) + date
+	payload = strings.Replace(payload, "\n", "", -1)
+	payload = strings.Replace(payload, "\t", "", -1)
 	payload = strings.Replace(payload, " ", "", -1)
 	s := device.Sign(payload)
 

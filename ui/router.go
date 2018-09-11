@@ -3,7 +3,6 @@ package ui
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/opencrypter/core/domain"
 	"github.com/opencrypter/core/infrastructure"
 	"net/http"
 	"strings"
@@ -16,16 +15,16 @@ func NewRouter() *gin.Engine {
 
 	router.POST("/devices", PostDevice)
 
-	router.Group("/devices/:id", authenticator()).
+	router.Group("/devices/:id", authMiddleware()).
 		PATCH("", UpdateSenderId)
 
-	router.Group("/accounts", authenticator()).
+	router.Group("/accounts", authMiddleware()).
 		GET("", GetAllAccounts).
 		PUT("/:id", PutAccount).
 		GET("/:id", GetAccount).
 		GET("/:id/balances", GetBalances)
 
-	router.Group("/exchanges", authenticator()).
+	router.Group("/exchanges", authMiddleware()).
 		GET("", GetExchanges).
 		GET("/:id", GetExchangeDetail).
 		GET("/:id/tickers", GetExchangeTickers)
@@ -46,10 +45,10 @@ func cors() gin.HandlerFunc {
 	}
 }
 
-func authenticator() gin.HandlerFunc {
+func authMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		request := context.Request
-		service := domain.NewValidateSignature(infrastructure.NewDeviceRepository())
+		validator := NewSignValidator(infrastructure.NewDeviceRepository())
 
 		id := request.Header.Get("X-Api-Id")
 		signature := request.Header.Get("X-Signature")
@@ -63,10 +62,11 @@ func authenticator() gin.HandlerFunc {
 		dateTime, _ := time.Parse(time.RFC1123, date)
 		body := string(readBody(context))
 		payload := request.Method + request.URL.Path + request.URL.RawQuery + body + date
+		payload = strings.Replace(payload, "\n", "", -1)
+		payload = strings.Replace(payload, "\t", "", -1)
 		payload = strings.Replace(payload, " ", "", -1)
 
-		err := service.Validate(id, dateTime, payload, signature)
-		if err != nil {
+		if err := validator.Validate(id, dateTime, payload, signature); err != nil {
 			context.AbortWithError(http.StatusForbidden, err)
 		}
 	}

@@ -1,16 +1,17 @@
-package domain
+package ui
 
 import (
+	"github.com/opencrypter/core/domain"
 	"time"
 )
 
 const maxTimeToExpire = 120
 
 type ValidateSignature struct {
-	repository DeviceRepository
+	repository domain.DeviceRepository
 }
 
-func NewValidateSignature(repository DeviceRepository) ValidateSignature {
+func NewSignValidator(repository domain.DeviceRepository) ValidateSignature {
 	return ValidateSignature{repository}
 }
 
@@ -33,10 +34,10 @@ func (v ValidateSignature) validateDate(date time.Time, deviceId string) error {
 	serverTime := time.Now().In(time.UTC)
 
 	if timeInUTC.After(serverTime) {
-		return NewInvalidSignatureDateError(deviceId, date)
+		return domain.NewInvalidSignatureDateError(deviceId, date)
 	}
 	if serverTime.Sub(timeInUTC).Seconds() > maxTimeToExpire {
-		return NewExpiredRequestError(deviceId)
+		return domain.NewExpiredRequestError(deviceId)
 	}
 	return nil
 }

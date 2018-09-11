@@ -18,6 +18,8 @@ type SenderIdDto struct {
 	SenderId string `binding:"required"`
 }
 
+// Post device.
+// Creates a new device.
 func PostDevice(context *gin.Context) {
 	application.DeviceRepository = infrastructure.NewDeviceRepository()
 	var dto DeviceDto
@@ -34,6 +36,8 @@ func PostDevice(context *gin.Context) {
 	apiSuccess(context, http.StatusCreated, device)
 }
 
+// Update sender id.
+// Updates the sender id related with a device.
 func UpdateSenderId(context *gin.Context) {
 	service := application.NewUpdateDeviceSenderId(infrastructure.NewDeviceRepository())
 	var dto SenderIdDto

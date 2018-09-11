@@ -11,12 +11,12 @@ type Account struct {
 }
 
 type Balance struct {
-	ID         string
-	AccountID  *string `gorm:"type:uuid;not null"`
-	Currency   *Currency
-	CurrencyID *string  `gorm:"type:uuid;not null"`
-	Volume     *float64 `gorm:"not null"`
-	HasAlert   *bool    `gorm:"has_alert:false;not null"`
+	ID         string    `json:"id"`
+	AccountID  *string   `json:"accountId";gorm:"type:uuid;not null"`
+	Currency   *Currency `json:"-"`
+	CurrencyID *string   `json:"currencyId";gorm:"type:uuid;not null"`
+	Volume     *float64  `json:"volume";gorm:"not null"`
+	HasAlert   *bool     `json:"hasAlert";gorm:"has_alert:false;not null"`
 }
 
 func NewAccount(id string, deviceId string, exchangeId string, name string, apiKey string, apiSecret string) *Account {
