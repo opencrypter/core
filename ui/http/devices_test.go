@@ -1,11 +1,11 @@
-package ui_test
+package main_test
 
 import (
 	"bytes"
 	"encoding/json"
 	"github.com/opencrypter/core/domain"
 	"github.com/opencrypter/core/infrastructure"
-	"github.com/opencrypter/core/ui"
+	"github.com/opencrypter/core/ui/http"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestPostDevice(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 	senderId := "abc"
 	os := "ios"
 	t.Run("It should create a device", func(t *testing.T) {
@@ -73,8 +73,8 @@ func TestPostDevice(t *testing.T) {
 }
 
 func TestUpdateSenderId(t *testing.T) {
-	router := ui.NewRouter()
-	dto := &ui.SenderIdDto{SenderId: "sender-id"}
+	router := main.NewRouter()
+	dto := &main.SenderIdDto{SenderId: "sender-id"}
 	t.Run("It should update the sender id", func(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)

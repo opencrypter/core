@@ -1,10 +1,10 @@
-package ui_test
+package main_test
 
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/opencrypter/core/domain"
 	"github.com/opencrypter/core/mock"
-	"github.com/opencrypter/core/ui"
+	"github.com/opencrypter/core/ui/http"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -13,7 +13,7 @@ import (
 
 func TestValidateSignature_Validate(t *testing.T) {
 	mockedRepository := mock.NewMockDeviceRepository(gomock.NewController(t))
-	service := ui.NewSignValidator(mockedRepository)
+	service := main.NewSignValidator(mockedRepository)
 	secret := "thisIsMySecret"
 	device := &domain.Device{ID: uuid.NewV4().String(), Secret: &secret}
 

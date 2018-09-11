@@ -1,10 +1,10 @@
-package ui_test
+package main_test
 
 import (
 	"github.com/gin-gonic/gin/json"
 	"github.com/opencrypter/core/domain"
 	"github.com/opencrypter/core/infrastructure"
-	"github.com/opencrypter/core/ui"
+	"github.com/opencrypter/core/ui/http"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 )
 
 func TestGetExchanges(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 	database := infrastructure.Database
 	database.Delete(domain.Exchange{})
 
@@ -38,7 +38,7 @@ func TestGetExchanges(t *testing.T) {
 }
 
 func TestGetExchangeDetail(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()

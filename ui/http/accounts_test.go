@@ -1,4 +1,4 @@
-package ui_test
+package main_test
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"github.com/opencrypter/core/application"
 	"github.com/opencrypter/core/domain"
 	"github.com/opencrypter/core/infrastructure"
-	"github.com/opencrypter/core/ui"
+	"github.com/opencrypter/core/ui/http"
 	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 )
 
 func TestGetAllAccounts(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 	account := domain.NewAccount(
 		uuid.NewV4().String(),
 		suite.existingDevice.ID,
@@ -46,7 +46,7 @@ func TestGetAllAccounts(t *testing.T) {
 }
 
 func TestPutAccount(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	id := uuid.NewV4().String()
 	exchangeId := uuid.NewV4().String()
@@ -55,7 +55,7 @@ func TestPutAccount(t *testing.T) {
 	apiSecret := "apiSecret"
 
 	t.Run("It should save the account", func(t *testing.T) {
-		dto := ui.AccountDto{Id: id, ExchangeId: &exchangeId, Name: &name, ApiKey: &apiKey, ApiSecret: &apiSecret}
+		dto := main.AccountDto{Id: id, ExchangeId: &exchangeId, Name: &name, ApiKey: &apiKey, ApiSecret: &apiSecret}
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
@@ -75,7 +75,7 @@ func TestPutAccount(t *testing.T) {
 	t.Run("It should return bad request on invalid account", func(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
-		json.NewEncoder(buffer).Encode(&ui.AccountDto{Id: "invalid"})
+		json.NewEncoder(buffer).Encode(&main.AccountDto{Id: "invalid"})
 
 		request := suite.newAuthenticatedRequest(requestData{
 			buffer: buffer,
@@ -87,7 +87,7 @@ func TestPutAccount(t *testing.T) {
 	})
 
 	t.Run("It should return forbidden on missing credentials", func(t *testing.T) {
-		dto := ui.AccountDto{Id: id, ExchangeId: &exchangeId, Name: &name, ApiKey: &apiKey, ApiSecret: &apiSecret}
+		dto := main.AccountDto{Id: id, ExchangeId: &exchangeId, Name: &name, ApiKey: &apiKey, ApiSecret: &apiSecret}
 		recorder := httptest.NewRecorder()
 		buffer := new(bytes.Buffer)
 		json.NewEncoder(buffer).Encode(&dto)
@@ -98,7 +98,7 @@ func TestPutAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
@@ -119,7 +119,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestGetBalances(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 	account := domain.NewAccount(uuid.NewV4().String(), uuid.NewV4().String(), uuid.NewV4().String(), "first", "api-key", "secret")
 	balance := domain.NewBalance(uuid.NewV4().String(), account.ID, uuid.NewV4().String(), 10, false)
 	account.Balances = []domain.Balance{*balance}

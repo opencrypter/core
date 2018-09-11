@@ -1,7 +1,7 @@
-package ui_test
+package main_test
 
 import (
-	"github.com/opencrypter/core/ui"
+	"github.com/opencrypter/core/ui/http"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetExchangeTickers(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		responseRecorder := httptest.NewRecorder()
@@ -23,7 +23,7 @@ func TestGetExchangeTickers(t *testing.T) {
 }
 
 func TestGetTickerAlerts(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		recorder := httptest.NewRecorder()
@@ -37,7 +37,7 @@ func TestGetTickerAlerts(t *testing.T) {
 }
 
 func TestPutTickerAlert(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		path := "/tickers/100cfe0b-78be-42c2-ba42-95d1f2c67336/alerts/100cfe0b-78be-42c2-ba42-95d1f2c67336"
@@ -49,7 +49,7 @@ func TestPutTickerAlert(t *testing.T) {
 }
 
 func TestDeleteTickerAlert(t *testing.T) {
-	router := ui.NewRouter()
+	router := main.NewRouter()
 
 	t.Run("It should return not implemented status code", func(t *testing.T) {
 		path := "/tickers/100cfe0b-78be-42c2-ba42-95d1f2c67336/alerts/100cfe0b-78be-42c2-ba42-95d1f2c67336"
